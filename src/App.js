@@ -16,6 +16,8 @@ import ProductList from "./components/ProductList";
 import { ThemeProvider } from "styled-components";
 // Data
 import products from "./products";
+// Routes
+import { Route, Switch } from "react-router";
 
 const theme = {
   light: {
@@ -45,37 +47,21 @@ function App() {
     setProduct(null);
   };
 
-  const selectProduct = (productId) => {
-    const selectedProduct = products.find(
-      (product) => product.id === productId
-    );
-    setProduct(selectedProduct);
-  };
-
   const toggleTheme = () =>
     setCurrentTheme(currentTheme === "light" ? "dark" : "light");
-
-  const setView = () =>
-    product ? (
-      <ProductDetail
-        product={product}
-        deleteProduct={deleteProduct}
-        selectProduct={selectProduct}
-      />
-    ) : (
-      <ProductList
-        products={_products}
-        deleteProduct={deleteProduct}
-        selectProduct={selectProduct}
-      />
-    );
 
   return (
     <ThemeProvider theme={theme[currentTheme]}>
       <GlobalStyle />
       <NavBar currentTheme={currentTheme} toggleTheme={toggleTheme} />
-      <Home />
-      {setView()}
+      <Switch>
+        <Route path="/products">
+          <ProductList products={_products} deleteProduct={deleteProduct} />
+        </Route>
+        <Route exact path="/">
+          <Home />
+        </Route>
+      </Switch>
     </ThemeProvider>
   );
 }
